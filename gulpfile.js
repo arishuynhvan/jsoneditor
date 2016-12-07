@@ -7,6 +7,8 @@ var shell = require('gulp-shell');
 var mkdirp = require('mkdirp');
 var webpack = require('webpack');
 var uglify = require('uglify-js');
+var connect = require('gulp-connect');
+
 
 var NAME    = 'jsoneditor';
 var NAME_MINIMALIST = 'jsoneditor-minimalist';
@@ -177,7 +179,7 @@ gulp.task('watch', ['bundle', 'bundle-css', 'copy-img'], function () {
 });
 
 // The default task (called when you run `gulp`)
-gulp.task('default', [
+gulp.task('build', [
   'bundle',
   'bundle-minimalist',
   'bundle-css',
@@ -186,3 +188,21 @@ gulp.task('default', [
   'minify',
   'minify-minimalist'
 ]);
+
+gulp.task('connect', function() {
+  connect.server({
+    root: __dirname,
+    livereload: true
+  });
+});
+
+gulp.task('html', function () {
+  gulp.src('./*.html')
+    .pipe(connect.reload());
+});
+
+// gulp.task('watch', function () {
+//   gulp.watch(['./app/*.html'], ['html']);
+// });
+
+gulp.task('default', ['connect', 'watch']);
